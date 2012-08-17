@@ -228,9 +228,9 @@ dep_dirs(Deps) ->
 save_dep_dirs(Config, Deps) ->                              
     rebar_config:set_xconf(Config, ?MODULE, dep_dirs(Deps)).
 
-get_shared_deps_dir(App) ->
-    BaseDir = rebar_config:get_global(base_dir, []),
-    SharedDepsDir = rebar_config:get_global(shared_deps_dir, undefined),
+get_shared_deps_dir(Config, App) ->
+    BaseDir = rebar_config:get_global(Config, base_dir, []),
+    SharedDepsDir = rebar_config:get_global(Config, shared_deps_dir, undefined),
     SharedDepsDirPath = case SharedDepsDir of
                             undefined ->
                                 undefined;
@@ -404,7 +404,7 @@ use_source(Config, Dep, Count) ->
             %% need to symlink. So construct the download dir and check if it
             %% already exists.
             {true, TargetDir} = get_deps_dir(Config, Dep#dep.app),
-            {true, SharedTargetDir} = get_shared_deps_dir(Dep#dep.app),
+            {true, SharedTargetDir} = get_shared_deps_dir(Config, Dep#dep.app),
             {AppDir, UseVersionedDir} = case SharedTargetDir of
                                 undefined ->
                                     {TargetDir, false};
